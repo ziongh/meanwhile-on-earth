@@ -1,0 +1,22 @@
+---
+BasedOnStyle: Microsoft
+Language: Cpp
+Standard: c++20
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Allman
+AccessModifierOffset: -4
+PointerAlignment: Left
+DerivePointerAlignment: false
+NamespaceIndentation: None
+
+# Unreal requires each generated header to remain the final include.
+SortIncludes: Never
+IncludeBlocks: Preserve
+
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+...

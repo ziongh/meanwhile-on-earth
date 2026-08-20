@@ -1,0 +1,9 @@
+target/**
+artifacts/**
+cache/**
+unreal/**/Binaries/**
+unreal/**/DerivedDataCache/**
+unreal/**/Intermediate/**
+unreal/**/Saved/**
+unreal/**/Releases/**
+

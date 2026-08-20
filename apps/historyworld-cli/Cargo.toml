@@ -1,0 +1,17 @@
+[package]
+name = "historyworld-cli"
+description = "Validation and snapshot CLI for HistoryWorld content releases"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+
+[dependencies]
+historyworld-content.workspace = true
+historyworld-domain.workspace = true
+historyworld-sim.workspace = true
+historyworld-storage.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

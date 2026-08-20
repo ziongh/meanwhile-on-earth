@@ -1,0 +1,23 @@
+[package]
+name = "historyworld-sim"
+description = "Budgeted deterministic semantic materializer for HistoryWorld"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+
+[dependencies]
+blake3.workspace = true
+historyworld-content.workspace = true
+historyworld-domain.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[lints]
+workspace = true
+
+[[bench]]
+name = "materialize"
+harness = false
+

@@ -1,0 +1,6 @@
+apis:
+  historyworld-v1:
+    root: schemas/openapi/historyworld-v1.yaml
+
+extends:
+  - recommended

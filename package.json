@@ -1,0 +1,22 @@
+{
+  "name": "historyworld-dev-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pinned repository-wide formatters and schema linters for HistoryWorld",
+  "packageManager": "npm@11.6.1",
+  "engines": {
+    "node": ">=22.12.0 <23"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run lint:markdown && npm run lint:openapi",
+    "lint:markdown": "markdownlint-cli2",
+    "lint:openapi": "redocly lint schemas/openapi/historyworld-v1.yaml"
+  },
+  "devDependencies": {
+    "@redocly/cli": "2.46.2",
+    "markdownlint-cli2": "0.23.2",
+    "prettier": "3.9.6"
+  }
+}

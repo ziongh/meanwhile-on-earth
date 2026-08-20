@@ -1,0 +1,39 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.rs]
+indent_style = space
+indent_size = 4
+max_line_length = 100
+
+[*.{toml,json,jsonc,yml,yaml,proto,sql}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+
+[*.{h,hpp,inl,cpp,cc,cxx,cs}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.md]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+trim_trailing_whitespace = false
+
+[*.{sh,bash,zsh}]
+indent_style = space
+indent_size = 2
+
+[{Makefile,*.mk}]
+indent_style = tab
+
+[*.{bat,cmd}]
+end_of_line = crlf
+

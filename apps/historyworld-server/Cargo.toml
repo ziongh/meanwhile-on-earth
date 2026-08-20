@@ -1,0 +1,28 @@
+[package]
+name = "historyworld-server"
+description = "Bounded read-only HTTP delivery service for HistoryWorld releases"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+
+[dependencies]
+axum.workspace = true
+blake3.workspace = true
+historyworld-content.workspace = true
+historyworld-domain.workspace = true
+historyworld-sim.workspace = true
+http.workspace = true
+http-body.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+tower.workspace = true

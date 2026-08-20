@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "llvm-vs-code-extensions.vscode-clangd",
+    "redhat.vscode-yaml",
+    "redocly.openapi-vs-code",
+    "rust-lang.rust-analyzer",
+    "tamasfe.even-better-toml",
+    "zxh404.vscode-proto3"
+  ]
+}

@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package historyworld.v1;
+
+// Compatibility policy:
+// - add fields; never change an existing field's type or meaning;
+// - reserve deleted field numbers and names;
+// - do not use maps in hashed canonical payloads;
+// - validate all fixed-size byte fields at the boundary.
+
+message ContentHash {
+  bytes blake3_256 = 1; // Exactly 32 bytes.
+}
+
+message StableId {
+  bytes value = 1; // Exactly 16 bytes, network byte order.
+}
+
+message WorldInstant {
+  sint64 seconds_since_unix_epoch = 1;
+  fixed32 nanosecond = 2;
+}
+
+message TimeRange {
+  WorldInstant start_inclusive = 1;
+  optional WorldInstant end_exclusive = 2;
+}
+
+message StableTimeSegment {
+  optional WorldInstant start_inclusive = 1;
+  optional WorldInstant end_exclusive = 2;
+}
+
+message WorldCell {
+  string body = 1; // "earth" initially; not hard-coded into consumers.
+  string scheme_version = 2;
+  uint32 face = 3;
+  uint32 level = 4;
+  fixed64 quadtree_path = 5;
+}
+
+enum DetailLevel {
+  DETAIL_LEVEL_UNSPECIFIED = 0;
+  DETAIL_LEVEL_PLANET = 1;
+  DETAIL_LEVEL_CONTINENTAL = 2;
+  DETAIL_LEVEL_REGIONAL = 3;
+  DETAIL_LEVEL_LOCAL = 4;
+  DETAIL_LEVEL_STREET = 5;
+}
+
+enum EpistemicClass {
+  EPISTEMIC_CLASS_UNSPECIFIED = 0;
+  EPISTEMIC_CLASS_DIRECT_OBSERVATION = 1;
+  EPISTEMIC_CLASS_REPORTED_PRIMARY_SOURCE = 2;
+  EPISTEMIC_CLASS_SCHOLARLY_INFERENCE = 3;
+  EPISTEMIC_CLASS_MODEL_DERIVED = 4;
+  EPISTEMIC_CLASS_PLAUSIBLE_RECONSTRUCTION = 5;
+  EPISTEMIC_CLASS_ARTISTIC_AMBIENT = 6;
+}
+
+enum LayerKind {
+  LAYER_KIND_UNSPECIFIED = 0;
+  LAYER_KIND_GEOLOGY = 1;
+  LAYER_KIND_HYDROLOGY = 2;
+  LAYER_KIND_CLIMATE = 3;
+  LAYER_KIND_BIOME = 4;
+  LAYER_KIND_POPULATION = 5;
+  LAYER_KIND_SETTLEMENT = 6;
+  LAYER_KIND_POLITICAL = 7;
+  LAYER_KIND_EVENT = 8;
+}
+
+enum EvidenceRole {
+  EVIDENCE_ROLE_UNSPECIFIED = 0;
+  EVIDENCE_ROLE_SUPPORTS = 1;
+  EVIDENCE_ROLE_CONTRADICTS = 2;
+  EVIDENCE_ROLE_CONTEXTUALIZES = 3;
+}
+
+enum DegradationReason {
+  DEGRADATION_REASON_UNSPECIFIED = 0;
+  DEGRADATION_REASON_CELL_RESOLUTION = 1;
+  DEGRADATION_REASON_INSTANCE_BUDGET = 2;
+}
+
+message SurfaceState {
+  // Presence distinguishes unknown from a measured or reconstructed zero.
+  optional sint64 mean_elevation_mm = 1;
+  optional uint64 relief_mm = 2;
+  optional uint32 land_fraction_ppm = 3;
+  optional uint32 water_fraction_ppm = 4;
+  optional uint32 vegetation_fraction_ppm = 5;
+  optional sint32 mean_temperature_millicelsius = 6;
+  optional uint32 annual_precipitation_mm = 7;
+}
+
+message ClaimRef {
+  StableId claim_id = 1;
+  uint32 revision = 2;
+  ContentHash content_hash = 3;
+}
+
+message EvidenceRef {
+  StableId citation_id = 1;
+  StableId source_revision_id = 2;
+  ContentHash content_hash = 3;
+  EvidenceRole role = 4;
+}
+
+message AppliedPatch {
+  StableId patch_id = 1;
+  EpistemicClass epistemic_class = 2;
+  repeated ClaimRef claims = 3;
+  repeated EvidenceRef evidence = 4;
+}
+
+message SnapshotMetrics {
+  uint32 candidate_patches = 1;
+  uint32 applied_patches = 2;
+  uint64 work_units = 3;
+  uint64 conservative_output_bound_bytes = 4;
+  uint32 suggested_instance_ceiling = 5;
+}
+
+message WorldSnapshot {
+  string contract = 1;
+  string materializer_version = 2;
+  ContentHash release_id = 3;
+  ContentHash semantic_state_hash = 4;
+  WorldCell cell = 5;
+  WorldInstant evaluated_at = 6;
+  WorldInstant realization_epoch = 7;
+  DetailLevel requested_detail = 8;
+  DetailLevel effective_detail = 9;
+  repeated DegradationReason degradation_reasons = 10;
+  repeated LayerKind layers = 11;
+  SurfaceState surface = 12;
+  repeated AppliedPatch provenance = 13;
+  ContentHash realization_seed = 14;
+  SnapshotMetrics metrics = 15;
+  StableTimeSegment stable_time_segment = 16;
+  ContentHash local_dependency_hash = 17;
+  string numeric_model_version = 18;
+  string prng_version = 19;
+}
+
+message ReleaseManifest {
+  ContentHash release_id = 1;
+  uint32 schema_version = 2;
+  string canonical_encoding = 3;
+  string label = 4;
+  string world_clock_version = 5;
+  string cell_scheme_version = 6;
+  ContentHash corpus_release = 7;
+  ContentHash interpretation_revision = 8;
+  optional ContentHash parent_release = 9;
+  uint64 patch_count = 10;
+  uint64 indexed_cell_count = 11;
+  repeated LayerKind layers = 12;
+  string compiler_version = 13;
+}

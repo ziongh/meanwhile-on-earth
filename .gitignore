@@ -1,0 +1,68 @@
+# Rust build, coverage, and profiling output
+/target/
+**/*.rs.bk
+*.profraw
+*.profdata
+/coverage/
+/profiling/
+/lcov.info
+
+# Unreal Engine disposable project and plugin state
+/unreal/**/.vs/
+/unreal/**/Binaries/
+/unreal/**/DerivedDataCache/
+/unreal/**/Intermediate/
+/unreal/**/Saved/
+/unreal/**/Content/Developers/
+/unreal/**/Releases/
+/unreal/**/compile_commands.json
+/unreal/**/*.sln
+/unreal/**/*.suo
+/unreal/**/*.opensdf
+/unreal/**/*.sdf
+/unreal/**/*.VC.db
+/unreal/**/*.VC.opendb
+/unreal/**/*.csproj
+/unreal/**/*.vcxproj
+/unreal/**/*.vcxproj.filters
+/unreal/**/*.vcxproj.user
+/unreal/**/*.xcodeproj/
+/unreal/**/*.xcworkspace/
+
+# Pinned Node-based developer tooling
+node_modules/
+/.npm/
+/npm-debug.log*
+/.prettier-cache
+
+# Editors and operating systems
+/.idea/
+/.fleet/
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/settings.json
+!/.vscode/tasks.json
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local configuration and secrets; examples stay versioned
+.env
+.env.*
+!.env.example
+!.env.*.example
+.envrc
+!.envrc.example
+/.direnv/
+/secrets/
+
+# Local services and rebuildable project output
+/artifacts/
+/cache/
+/.cache/
+/data/generated/
+/data/local/
+/schemas/generated/
+/infra/postgres/data/
+/.pgdata/

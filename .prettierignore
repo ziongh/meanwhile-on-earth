@@ -1,0 +1,17 @@
+CLAUDE.md
+Cargo.lock
+package-lock.json
+target
+artifacts
+cache
+data/generated
+data/local
+schemas/generated
+node_modules
+infra/postgres/migrations
+unreal/**/Binaries
+unreal/**/DerivedDataCache
+unreal/**/Intermediate
+unreal/**/Saved
+unreal/**/Releases
+

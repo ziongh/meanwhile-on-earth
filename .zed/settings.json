@@ -1,0 +1,123 @@
+{
+  "auto_install_extensions": {
+    "csharp": true,
+    "ini": true,
+    "make": true,
+    "markdownlint": true,
+    "proto": true,
+    "sql": true,
+    "tombi": true,
+    "toml": true
+  },
+  "ensure_final_newline_on_save": true,
+  "file_scan_inclusions": [],
+  "format_on_save": "off",
+  "hard_tabs": false,
+  "line_ending": "prefer_lf",
+  "preferred_line_length": 100,
+  "remove_trailing_whitespace_on_save": true,
+  "scan_symlinks": "expanded",
+  "tab_size": 2,
+  "tasks": {
+    "enabled": true,
+    "prefer_lsp": false
+  },
+  "file_types": {
+    "C++": ["h", "hpp", "inl", "cpp", "cc", "cxx"],
+    "JSON": ["uproject", "uplugin"],
+    "YAML": [".clang-format"]
+  },
+  "languages": {
+    "Rust": {
+      "format_on_save": "on",
+      "formatter": "language_server",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "tab_size": 4
+    },
+    "C++": {
+      "format_on_save": "off",
+      "formatter": "language_server",
+      "hard_tabs": false,
+      "preferred_line_length": 120,
+      "tab_size": 4
+    },
+    "CSharp": {
+      "format_on_save": "off",
+      "hard_tabs": false,
+      "preferred_line_length": 120,
+      "tab_size": 4
+    },
+    "JSON": {
+      "format_on_save": "on",
+      "formatter": "prettier",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "tab_size": 2
+    },
+    "JSONC": {
+      "format_on_save": "on",
+      "formatter": "prettier",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "tab_size": 2
+    },
+    "Markdown": {
+      "format_on_save": "on",
+      "formatter": "prettier",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "remove_trailing_whitespace_on_save": false,
+      "tab_size": 2
+    },
+    "YAML": {
+      "format_on_save": "on",
+      "formatter": "prettier",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "tab_size": 2
+    },
+    "TOML": {
+      "format_on_save": "off",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "tab_size": 2
+    },
+    "Proto": {
+      "format_on_save": "off",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "tab_size": 2
+    },
+    "SQL": {
+      "format_on_save": "off",
+      "hard_tabs": false,
+      "preferred_line_length": 100,
+      "tab_size": 2
+    },
+    "Make": {
+      "format_on_save": "off",
+      "hard_tabs": true,
+      "tab_size": 4
+    }
+  },
+  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+        "check": {
+          "command": "check",
+          "extraArgs": ["--locked"]
+        }
+      }
+    },
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "schemas": {
+            "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.{yml,yaml}"
+          }
+        }
+      }
+    }
+  }
+}

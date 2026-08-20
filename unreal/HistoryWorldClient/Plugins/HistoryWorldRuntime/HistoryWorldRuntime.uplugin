@@ -1,0 +1,20 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.1.0",
+  "FriendlyName": "HistoryWorld Runtime",
+  "Description": "Engine-facing adapter for immutable HistoryWorld semantic snapshots.",
+  "Category": "HistoryWorld",
+  "CreatedBy": "HistoryWorld contributors",
+  "CanContainContent": false,
+  "IsBetaVersion": true,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "HistoryWorldRuntime",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}
+

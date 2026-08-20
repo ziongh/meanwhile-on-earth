@@ -1,0 +1,50 @@
+[
+  {
+    "label": "HistoryWorld: setup tools",
+    "command": "make",
+    "args": ["setup"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "allow_concurrent_runs": false,
+    "hide": "on_success"
+  },
+  {
+    "label": "HistoryWorld: format",
+    "command": "make",
+    "args": ["format"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "allow_concurrent_runs": false,
+    "hide": "on_success"
+  },
+  {
+    "label": "HistoryWorld: fast checks",
+    "command": "make",
+    "args": ["format-check", "check"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "allow_concurrent_runs": false,
+    "hide": "on_success"
+  },
+  {
+    "label": "HistoryWorld: format Unreal C++",
+    "command": "make",
+    "args": ["format-unreal"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "allow_concurrent_runs": false,
+    "hide": "on_success"
+  },
+  {
+    "label": "HistoryWorld: full CI",
+    "command": "make",
+    "args": ["ci"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "allow_concurrent_runs": false,
+    "hide": "on_success"
+  },
+  {
+    "label": "HistoryWorld: run server",
+    "command": "make",
+    "args": ["run-server"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": true
+  }
+]

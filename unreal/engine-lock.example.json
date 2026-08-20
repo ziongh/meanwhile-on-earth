@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "unreal": {
+    "association": "5.8",
+    "exact_build_or_commit": "REQUIRED_BEFORE_PRODUCTION_COOK",
+    "toolchain": "REQUIRED_BEFORE_PRODUCTION_COOK",
+    "target_platforms": []
+  },
+  "plugins": [],
+  "renderer_profiles": [],
+  "semantic_schema": "historyworld.v1",
+  "adapter_version": "0.1.0",
+  "derived_data_cache_namespace": "historyworld-ue5.8-adapter-v1"
+}

@@ -1,0 +1,61 @@
+name: foundation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  schemas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: "1.24.x"
+          cache: false
+      - name: Install pinned developer tools
+        run: make setup
+      - name: Text format
+        run: make format-check-text
+      - name: Markdown lint
+        run: make lint-text
+      - name: GitHub Actions lint
+        run: make workflow-check
+      - name: OpenAPI lint
+        run: make openapi-check
+      - name: Protobuf format
+        run: make format-check-proto
+      - name: Protobuf lint
+        run: make proto-check
+
+  rust:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Toolchain
+        run: rustup show
+      - name: Format
+        run: make format-check-rust
+      - name: Check
+        run: make check
+      - name: Clippy
+        run: make lint-rust
+      - name: Tests
+        run: make test
+      - name: Validate bundled release
+        run: make validate

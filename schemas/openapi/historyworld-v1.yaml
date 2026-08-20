@@ -1,0 +1,401 @@
+openapi: 3.1.0
+info:
+  title: HistoryWorld Read API
+  version: 0.1.0
+  license:
+    name: Project license not yet declared
+    identifier: LicenseRef-Pending
+  description: >-
+    Bounded read-only delivery of immutable semantic releases. JSON is the control-plane
+    representation; large immutable chunks will use Protobuf or established geospatial formats at
+    digest-addressed URLs.
+servers:
+  - url: http://127.0.0.1:8080
+# The foundation service is intentionally unauthenticated. Deployments that
+# expose authoring or non-public releases must define their own security scheme.
+security: []
+paths:
+  /healthz:
+    get:
+      summary: Check service health
+      operationId: health
+      responses:
+        "200":
+          description: Service and loaded release are healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, release_id]
+                properties:
+                  status: { type: string, const: ok }
+                  release_id: { $ref: "#/components/schemas/ContentHash" }
+        "4XX": { $ref: "#/components/responses/Error" }
+  /v1/releases/current:
+    get:
+      summary: Resolve the current semantic release
+      operationId: currentRelease
+      description: Resolves the mutable head. Clients should pin the returned release ID.
+      responses:
+        "200":
+          description: "Current manifest; returned with `Cache-Control: no-cache`."
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReleaseManifest" }
+        "4XX": { $ref: "#/components/responses/Error" }
+  /v1/releases/{release_id}/manifest:
+    parameters:
+      - $ref: "#/components/parameters/ReleaseId"
+    get:
+      summary: Read an immutable release manifest
+      operationId: pinnedManifest
+      responses:
+        "200":
+          description: Immutable release manifest.
+          headers:
+            ETag: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReleaseManifest" }
+        "304": { description: Cached representation is current. }
+        "404": { $ref: "#/components/responses/Error" }
+  /v1/releases/{release_id}/snapshot:
+    parameters:
+      - $ref: "#/components/parameters/ReleaseId"
+    get:
+      summary: Materialize a bounded semantic snapshot
+      operationId: materializeSnapshot
+      parameters:
+        - name: cell
+          in: query
+          description:
+            HistoryWorld cube-sphere v1 cell. Defaults to the demo cell in the foundation server.
+          schema: { $ref: "#/components/schemas/WorldCell" }
+          example: "0:14:ee085cd"
+        - name: at_seconds
+          in: query
+          description: >-
+            Signed deep-time seconds encoded as decimal text. Mutually exclusive with `year`,
+            `month`, and `day`.
+          schema:
+            type: string
+            pattern: "^-?(0|[1-9][0-9]{0,18})$"
+            minLength: 1
+            maxLength: 20
+        - name: nanos
+          in: query
+          description: Fractional nanoseconds; valid only with `at_seconds`.
+          schema: { type: integer, minimum: 0, maximum: 999999999 }
+        - name: year
+          in: query
+          description: >-
+            Astronomical year; year 0 is 1 BCE. Calendar fields cannot be combined with
+            `at_seconds`.
+          schema:
+            type: string
+            pattern: "^-?(0|[1-9][0-9]{0,18})$"
+            minLength: 1
+            maxLength: 20
+            default: "80"
+        - name: month
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 12, default: 1 }
+        - name: day
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 31, default: 1 }
+        - name: detail
+          in: query
+          schema:
+            type: string
+            enum: [planet, continental, regional, local, street]
+            default: local
+        - name: layers
+          in: query
+          description: >-
+            Comma-separated semantic layers. Omit to select every layer. A production server must
+            reject unknown or duplicate values.
+          style: form
+          explode: false
+          schema:
+            type: array
+            minItems: 1
+            maxItems: 8
+            uniqueItems: true
+            items: { $ref: "#/components/schemas/LayerKind" }
+        - name: max_candidate_patches
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 65536, format: int32 }
+        - name: max_output_bytes
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 33554432, format: int32 }
+        - name: max_instances
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100000, format: int32 }
+        - name: max_work_units
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 1000000, format: int64 }
+      responses:
+        "200":
+          description: Deterministic semantic snapshot under the effective budgets.
+          headers:
+            ETag: { schema: { type: string } }
+            Cache-Control: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorldSnapshot" }
+        "304": { description: Cached representation is current. }
+        "400": { $ref: "#/components/responses/Error" }
+        "404": { $ref: "#/components/responses/Error" }
+        "413": { $ref: "#/components/responses/Error" }
+        "422": { $ref: "#/components/responses/Error" }
+        "503": { $ref: "#/components/responses/Error" }
+        "504": { $ref: "#/components/responses/Error" }
+components:
+  parameters:
+    ReleaseId:
+      name: release_id
+      in: path
+      required: true
+      schema: { $ref: "#/components/schemas/ContentHash" }
+  responses:
+    Error:
+      description: Structured error.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    ContentHash:
+      type: string
+      pattern: "^[0-9a-f]{64}$"
+      minLength: 64
+      maxLength: 64
+    StableId:
+      type: string
+      pattern: "^[0-9a-f]{32}$"
+      minLength: 32
+      maxLength: 32
+    WorldCell:
+      type: string
+      description: Cube-sphere v1 face, level, and hexadecimal quadtree path.
+      pattern: "^[0-5]:([0-9]|1[0-9]|2[0-8]):[0-9a-f]{1,14}$"
+      maxLength: 20
+    WorldInstant:
+      type: object
+      additionalProperties: false
+      required: [seconds, nanos]
+      properties:
+        seconds:
+          type: string
+          description: Signed i64 seconds encoded as decimal text.
+          pattern: "^-?(0|[1-9][0-9]{0,18})$"
+          minLength: 1
+          maxLength: 20
+        nanos: { type: integer, minimum: 0, maximum: 999999999 }
+    LayerKind:
+      type: string
+      enum: [geology, hydrology, climate, biome, population, settlement, political, event]
+    LayerMask:
+      type: integer
+      description: Bit set `n` selects the layer whose declared ordinal is `n`.
+      minimum: 0
+      maximum: 255
+    DetailLevel:
+      type: string
+      enum: [planet, continental, regional, local, street]
+    EpistemicClass:
+      type: string
+      enum:
+        - direct_observation
+        - reported_primary_source
+        - scholarly_inference
+        - model_derived
+        - plausible_reconstruction
+        - artistic_ambient
+    EvidenceRole:
+      type: string
+      enum: [supports, contradicts, contextualizes]
+    DegradationReason:
+      type: string
+      enum: [cell_resolution, instance_budget]
+    ReleaseManifest:
+      type: object
+      additionalProperties: false
+      required:
+        - release_id
+        - schema_version
+        - compiler_version
+        - canonical_encoding
+        - label
+        - world_clock_version
+        - cell_scheme_version
+        - corpus_release
+        - interpretation_revision
+        - parent_release
+        - patch_count
+        - indexed_cell_count
+        - layers
+      properties:
+        release_id: { $ref: "#/components/schemas/ContentHash" }
+        schema_version: { type: integer, minimum: 0, maximum: 65535 }
+        compiler_version: { type: string, minLength: 1 }
+        canonical_encoding: { type: string, minLength: 1 }
+        label: { type: string, minLength: 1 }
+        world_clock_version: { type: string, minLength: 1 }
+        cell_scheme_version: { type: string, minLength: 1 }
+        corpus_release: { $ref: "#/components/schemas/ContentHash" }
+        interpretation_revision: { $ref: "#/components/schemas/ContentHash" }
+        parent_release:
+          oneOf:
+            - { $ref: "#/components/schemas/ContentHash" }
+            - { type: "null" }
+        patch_count: { type: integer, format: int64, minimum: 0 }
+        indexed_cell_count: { type: integer, format: int64, minimum: 0 }
+        layers:
+          type: array
+          maxItems: 8
+          uniqueItems: true
+          items: { $ref: "#/components/schemas/LayerKind" }
+    WorldSnapshot:
+      type: object
+      additionalProperties: false
+      required:
+        - contract
+        - materializer_version
+        - numeric_model_version
+        - prng_version
+        - release_id
+        - local_dependency_hash
+        - semantic_state_hash
+        - cell
+        - evaluated_at
+        - stable_time_segment
+        - realization_epoch
+        - requested_detail
+        - effective_detail
+        - degradation_reasons
+        - layers
+        - surface
+        - provenance
+        - realization_seed
+        - metrics
+      properties:
+        contract: { type: string, const: historyworld.snapshot.v1 }
+        materializer_version: { type: string, minLength: 1 }
+        numeric_model_version: { type: string, minLength: 1 }
+        prng_version: { type: string, minLength: 1 }
+        release_id: { $ref: "#/components/schemas/ContentHash" }
+        local_dependency_hash: { $ref: "#/components/schemas/ContentHash" }
+        semantic_state_hash: { $ref: "#/components/schemas/ContentHash" }
+        cell: { $ref: "#/components/schemas/WorldCell" }
+        evaluated_at: { $ref: "#/components/schemas/WorldInstant" }
+        stable_time_segment: { $ref: "#/components/schemas/StableTimeSegment" }
+        realization_epoch: { $ref: "#/components/schemas/WorldInstant" }
+        requested_detail: { $ref: "#/components/schemas/DetailLevel" }
+        effective_detail: { $ref: "#/components/schemas/DetailLevel" }
+        degradation_reasons:
+          type: array
+          uniqueItems: true
+          items: { $ref: "#/components/schemas/DegradationReason" }
+        layers: { $ref: "#/components/schemas/LayerMask" }
+        surface: { $ref: "#/components/schemas/SurfaceState" }
+        provenance:
+          type: array
+          items: { $ref: "#/components/schemas/AppliedPatch" }
+        realization_seed: { $ref: "#/components/schemas/ContentHash" }
+        metrics: { $ref: "#/components/schemas/SnapshotMetrics" }
+    StableTimeSegment:
+      type: object
+      additionalProperties: false
+      required: [start_inclusive, end_exclusive]
+      properties:
+        start_inclusive:
+          oneOf:
+            - { $ref: "#/components/schemas/WorldInstant" }
+            - { type: "null" }
+        end_exclusive:
+          oneOf:
+            - { $ref: "#/components/schemas/WorldInstant" }
+            - { type: "null" }
+    SurfaceState:
+      type: object
+      additionalProperties: false
+      required:
+        - mean_elevation_mm
+        - relief_mm
+        - land_fraction_ppm
+        - water_fraction_ppm
+        - vegetation_fraction_ppm
+        - mean_temperature_millicelsius
+        - annual_precipitation_mm
+      properties:
+        mean_elevation_mm:
+          type: [integer, "null"]
+          format: int64
+        relief_mm:
+          type: [integer, "null"]
+          minimum: 0
+        land_fraction_ppm: { $ref: "#/components/schemas/NullablePartsPerMillion" }
+        water_fraction_ppm: { $ref: "#/components/schemas/NullablePartsPerMillion" }
+        vegetation_fraction_ppm: { $ref: "#/components/schemas/NullablePartsPerMillion" }
+        mean_temperature_millicelsius:
+          type: [integer, "null"]
+          format: int32
+        annual_precipitation_mm:
+          type: [integer, "null"]
+          minimum: 0
+    NullablePartsPerMillion:
+      type: [integer, "null"]
+      minimum: 0
+      maximum: 1000000
+    ClaimRef:
+      type: object
+      additionalProperties: false
+      required: [claim_id, revision, content_hash]
+      properties:
+        claim_id: { $ref: "#/components/schemas/StableId" }
+        revision: { type: integer, minimum: 0, maximum: 4294967295 }
+        content_hash: { $ref: "#/components/schemas/ContentHash" }
+    EvidenceRef:
+      type: object
+      additionalProperties: false
+      required: [citation_id, source_revision_id, content_hash, role]
+      properties:
+        citation_id: { $ref: "#/components/schemas/StableId" }
+        source_revision_id: { $ref: "#/components/schemas/StableId" }
+        content_hash: { $ref: "#/components/schemas/ContentHash" }
+        role: { $ref: "#/components/schemas/EvidenceRole" }
+    AppliedPatch:
+      type: object
+      additionalProperties: false
+      required: [patch_id, epistemic_class, claims, evidence]
+      properties:
+        patch_id: { $ref: "#/components/schemas/StableId" }
+        epistemic_class: { $ref: "#/components/schemas/EpistemicClass" }
+        claims:
+          type: array
+          items: { $ref: "#/components/schemas/ClaimRef" }
+        evidence:
+          type: array
+          items: { $ref: "#/components/schemas/EvidenceRef" }
+    SnapshotMetrics:
+      type: object
+      additionalProperties: false
+      required:
+        - candidate_patches
+        - applied_patches
+        - work_units
+        - conservative_output_bound_bytes
+        - suggested_instance_ceiling
+      properties:
+        candidate_patches: { type: integer, minimum: 0, maximum: 4294967295 }
+        applied_patches: { type: integer, minimum: 0, maximum: 4294967295 }
+        work_units: { type: integer, minimum: 0, format: int64 }
+        conservative_output_bound_bytes: { type: integer, minimum: 0, format: int64 }
+        suggested_instance_ceiling: { type: integer, minimum: 0, maximum: 4294967295 }
+    Error:
+      type: object
+      additionalProperties: false
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }

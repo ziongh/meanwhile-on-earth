@@ -1,0 +1,30 @@
+* text=auto eol=lf
+
+# Native Windows launchers keep their platform line endings.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Unreal and source-art binary assets must never be line-normalized.
+*.uasset binary
+*.umap binary
+*.ubulk binary
+*.uexp binary
+*.uptnl binary
+*.fbx binary
+*.blend binary
+*.glb binary
+*.exr binary
+*.hdr binary
+*.tif binary
+*.tiff binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.wav binary
+*.flac binary
+
+# Large data formats are binary even before an object-store/LFS policy exists.
+*.parquet binary
+*.geotiff binary
+*.gpkg binary
+*.zst binary

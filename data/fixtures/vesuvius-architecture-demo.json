@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "label": "Vesuvius 79 CE architecture fixture — illustrative, not research data",
+  "world_clock_version": "hw-clock-proleptic-gregorian-v1",
+  "cell_scheme_version": "hw-cube-sphere-v1",
+  "corpus_release": "1111111111111111111111111111111111111111111111111111111111111111",
+  "interpretation_revision": "2222222222222222222222222222222222222222222222222222222222222222",
+  "parent_release": null,
+  "patches": [
+    {
+      "id": "00000000000000000000000000000001",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-60273763200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 10,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "set_mean_elevation_mm", "value": 1800000 }
+    },
+    {
+      "id": "00000000000000000000000000000002",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-60273763200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 11,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "set_relief_mm", "value": 2000000 }
+    },
+    {
+      "id": "00000000000000000000000000000003",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-60273763200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 12,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "set_land_fraction_ppm", "value": 1000000 }
+    },
+    {
+      "id": "00000000000000000000000000000004",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-60273763200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 13,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "set_vegetation_fraction_ppm", "value": 650000 }
+    },
+    {
+      "id": "00000000000000000000000000000005",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-59653843200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 20,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "offset_mean_elevation_mm", "value": -450000 }
+    },
+    {
+      "id": "00000000000000000000000000000006",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-59653843200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 21,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "set_relief_mm", "value": 1550000 }
+    },
+    {
+      "id": "00000000000000000000000000000007",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-59653843200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 22,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "set_vegetation_fraction_ppm", "value": 50000 }
+    },
+    {
+      "id": "00000000000000000000000000000008",
+      "cell": "0:14:ee085cd",
+      "validity": {
+        "start": { "seconds": "-59011459200", "nanos": 0 },
+        "end": null
+      },
+      "canonical_order": 30,
+      "epistemic_class": "artistic_ambient",
+      "confidence": null,
+      "operation": { "type": "set_vegetation_fraction_ppm", "value": 180000 }
+    }
+  ]
+}
