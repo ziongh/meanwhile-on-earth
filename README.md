@@ -1,5 +1,7 @@
 # Meanwhile On Earth
 
+![Meanwhile On Earth — a globe connecting events across places and time](docs/assets/meanwhile-on-earth-logo.png)
+
 _Explore history as a connected world, not a stack of disconnected dates._
 
 ## Why this project exists
@@ -68,7 +70,8 @@ about the provenance of its own software.
 HistoryWorld has been designed and coded with the help of AI coding assistants, and we expect to
 keep using them. They have helped explore architecture, draft and refactor code, find edge cases,
 write tests and documentation, and review changes. This README was also drafted with an AI assistant
-under maintainer direction.
+under maintainer direction. The logo at the top of this page was generated with an AI image tool
+from a maintainer-directed brief.
 
 AI output is not treated as fact or authority. A model-generated statement is not historical
 evidence, a plausible citation is not a real citation, and generated code is not correct merely
