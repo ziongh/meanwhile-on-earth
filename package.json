@@ -15,8 +15,8 @@
     "lint:openapi": "redocly lint schemas/openapi/historyworld-v1.yaml"
   },
   "devDependencies": {
-    "@redocly/cli": "2.46.2",
-    "markdownlint-cli2": "0.23.2",
-    "prettier": "3.9.6"
+    "@redocly/cli": "2.54.3",
+    "markdownlint-cli2": "0.23.3",
+    "prettier": "3.9.9"
   }
 }
